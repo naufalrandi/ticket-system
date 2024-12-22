@@ -16,7 +16,20 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $open = \App\Models\Ticketing::where('status', 'open')->count();
+    $closed = \App\Models\Ticketing::where('status', 'closed')->count();
+    $low = \App\Models\Ticketing::where('priority', 'low')->count();
+    $medium = \App\Models\Ticketing::where('priority', 'medium')->count();
+    $high = \App\Models\Ticketing::where('priority', 'high')->count();
+    $critical = \App\Models\Ticketing::where('priority', 'critical')->count();
+    return Inertia::render('Dashboard', [
+        'open' => $open,
+        'closed' => $closed,
+        'low' => $low,
+        'medium' => $medium,
+        'high' => $high,
+        'critical' => $critical
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
